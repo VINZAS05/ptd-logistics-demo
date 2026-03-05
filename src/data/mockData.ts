@@ -331,22 +331,13 @@ const enPatioDiarioBase = [
   { dia: 26, mes: 'febrero', cantidad: 384 }, { dia: 27, mes: 'febrero', cantidad: 732 },
 ];
 
-// Generar movimientos detallados (lazy)
-let _movEvac: MovimientoDiario[] | null = null;
-let _movIng: MovimientoDiario[] | null = null;
-let _movPatio: MovimientoDiario[] | null = null;
-export function getMovimientosEvacuados() { if (!_movEvac) _movEvac = generarMovimientos(evacuadosDiarioBase, pesoNavierasEvac, pesoTiposStd, 2026); return _movEvac; }
-export function getMovimientosIngresados() { if (!_movIng) _movIng = generarMovimientos(ingresadosDiarioBase, pesoNavierasIng, pesoTiposStd, 2026); return _movIng; }
-export function getMovimientosEnPatio() { if (!_movPatio) _movPatio = generarMovimientos(enPatioDiarioBase, pesoNavierasPatio, pesoTiposStd, 2026); return _movPatio; }
-export let movimientosEvacuados: MovimientoDiario[] = [];
-export let movimientosIngresados: MovimientoDiario[] = [];
-export let movimientosEnPatio: MovimientoDiario[] = [];
+// Generar movimientos detallados
+export const movimientosEvacuados = generarMovimientos(evacuadosDiarioBase, pesoNavierasEvac, pesoTiposStd, 2026);
+export const movimientosIngresados = generarMovimientos(ingresadosDiarioBase, pesoNavierasIng, pesoTiposStd, 2026);
+export const movimientosEnPatio = generarMovimientos(enPatioDiarioBase, pesoNavierasPatio, pesoTiposStd, 2026);
 
-export function initMovimientosIfNeeded() {
-  if (movimientosEvacuados.length === 0) movimientosEvacuados = getMovimientosEvacuados();
-  if (movimientosIngresados.length === 0) movimientosIngresados = getMovimientosIngresados();
-  if (movimientosEnPatio.length === 0) movimientosEnPatio = getMovimientosEnPatio();
-}
+// Compat stubs
+export function initMovimientosIfNeeded() {}
 
 // Datos base para graficos simples (sin desglose)
 export const evacuadosPorDia = evacuadosDiarioBase;
@@ -806,47 +797,34 @@ function generarIslaDetallada(config: IslaConfig): IslaDetallada {
   };
 }
 
-// Lazy generation: solo se genera cuando se accede por primera vez
-let _islasDetalladas: IslaDetallada[] | null = null;
-function getIslasDetalladas(): IslaDetallada[] {
-  if (!_islasDetalladas) {
-    _islasDetalladas = islasConfig.map(c => generarIslaDetallada(c));
-    // Calcular resumenPatio
-    const _totalCont = _islasDetalladas.reduce((s, i) => s + i.ocupacion, 0);
-    const _contPorNaviera: Record<Naviera, number> = { 'CMA CGM': 0, 'Cosco Shipping': 0, 'HMM': 0, 'ONE': 0, 'PIL': 0, 'Evergreen': 0, 'Wan Hai': 0, 'Yang Ming': 0, 'Hapag-Lloyd': 0 };
-    _islasDetalladas.forEach(isla => isla.resumenNavieras.forEach(rn => { _contPorNaviera[rn.naviera] += rn.cantidad; }));
-    resumenPatio = {
-      totalContenedores: _totalCont,
-      deltaHoy: 234,
-      capacidadMaxima: 20195,
-      porNaviera: (Object.entries(_contPorNaviera) as [Naviera, number][])
-        .sort((a, b) => b[1] - a[1])
-        .map(([naviera, cantidad]) => ({
-          naviera,
-          cantidad,
-          porcentaje: Math.round(cantidad / _totalCont * 1000) / 10,
-        })),
-      dwellTimePromedio: 8.3,
-      ocupacion: Math.round(_totalCont / 20195 * 1000) / 10,
-    };
-  }
-  return _islasDetalladas;
-}
+export const islasDetalladas: IslaDetallada[] = islasConfig.map(c => generarIslaDetallada(c));
 
-export { getIslasDetalladas };
-// Re-exported as lazy-initialized values
-export let islasDetalladas: IslaDetallada[] = [];
-export let islasZonaNorte: IslaDetallada[] = [];
-export let islasZonaSur: IslaDetallada[] = [];
+// Separar por zona
+export const islasZonaNorte = islasDetalladas.filter(i => i.config.zona === 'norte');
+export const islasZonaSur = islasDetalladas.filter(i => i.config.zona === 'sur');
 
-export function initIslasIfNeeded() {
-  if (islasDetalladas.length === 0) {
-    const data = getIslasDetalladas();
-    islasDetalladas = data;
-    islasZonaNorte = data.filter(i => i.config.zona === 'norte');
-    islasZonaSur = data.filter(i => i.config.zona === 'sur');
-  }
-}
+// Calcular resumenPatio
+const _totalCont = islasDetalladas.reduce((s, i) => s + i.ocupacion, 0);
+const _contPorNaviera: Record<Naviera, number> = { 'CMA CGM': 0, 'Cosco Shipping': 0, 'HMM': 0, 'ONE': 0, 'PIL': 0, 'Evergreen': 0, 'Wan Hai': 0, 'Yang Ming': 0, 'Hapag-Lloyd': 0 };
+islasDetalladas.forEach(isla => isla.resumenNavieras.forEach(rn => { _contPorNaviera[rn.naviera] += rn.cantidad; }));
+resumenPatio = {
+  totalContenedores: _totalCont,
+  deltaHoy: 234,
+  capacidadMaxima: 20195,
+  porNaviera: (Object.entries(_contPorNaviera) as [Naviera, number][])
+    .sort((a, b) => b[1] - a[1])
+    .map(([naviera, cantidad]) => ({
+      naviera,
+      cantidad,
+      porcentaje: Math.round(cantidad / _totalCont * 1000) / 10,
+    })),
+  dwellTimePromedio: 8.3,
+  ocupacion: Math.round(_totalCont / 20195 * 1000) / 10,
+};
+
+// Compat stubs
+export function initIslasIfNeeded() {}
+export function getIslasDetalladas() { return islasDetalladas; }
 
 // Resumen del patio actualizado basado en plano real
 export const capacidadTotalPlano = {
@@ -911,7 +889,7 @@ export const kpisHistoricos = [
 
 // Clonar el estado completo del patio (deep copy) para que el optimizador trabaje sin mutar
 export function clonarEstadoPatio(): IslaDetallada[] {
-  return getIslasDetalladas().map(isla => ({
+  return islasDetalladas.map(isla => ({
     ...isla,
     grid: isla.grid.map(fila =>
       fila.map(celda => ({
