@@ -52,9 +52,58 @@ const panels: Record<PanelId, React.ReactNode> = {
   admin: <AdminPanel />,
 };
 
+const ACCESS_KEY = 'ptd-woodward-2025';
+
+function AccessGate({ onUnlock }: { onUnlock: () => void }) {
+  const [key, setKey] = useState('');
+  const [error, setError] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (key === ACCESS_KEY) {
+      sessionStorage.setItem('ptd_access', '1');
+      onUnlock();
+    } else {
+      setError(true);
+      setTimeout(() => setError(false), 2000);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0F1E3D] flex flex-col items-center justify-center p-8">
+      <div className="flex items-center gap-4 mb-8">
+        <img src="/woodward-logo-white.svg" alt="Logistica Woodward" className="w-12 h-12" />
+        <div>
+          <h1 className="text-white font-bold text-2xl tracking-tight">PTD LOGISTICS</h1>
+          <p className="text-white/40 text-xs">Acceso restringido</p>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit} className="w-full max-w-xs">
+        <input
+          type="password"
+          value={key}
+          onChange={e => setKey(e.target.value)}
+          placeholder="Clave de acceso"
+          className={`w-full px-4 py-3 rounded-lg bg-white/[0.08] border ${error ? 'border-red-500' : 'border-white/20'} text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-400 transition-colors`}
+          autoFocus
+        />
+        {error && <p className="text-red-400 text-xs mt-2">Clave incorrecta</p>}
+        <button type="submit" className="w-full mt-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors">
+          Acceder
+        </button>
+      </form>
+      <div className="mt-16 flex items-center gap-3">
+        <img src="/logo-vinzas.svg" alt="Vinzas AI" className="w-6 h-6" />
+        <p className="text-xs font-bold bg-gradient-to-r from-[#00C6FF] to-[#9D00FF] bg-clip-text text-transparent">VINZAS AI</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const { user, hasAccess, allowedPanels } = useAuth();
   const [activePanel, setActivePanel] = useState<PanelId>('home');
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('ptd_access') === '1');
 
   // Si el panel activo no es accesible, ir al primero permitido
   useEffect(() => {
@@ -62,6 +111,9 @@ function App() {
       setActivePanel(allowedPanels[0]);
     }
   }, [user, activePanel, allowedPanels, hasAccess]);
+
+  // Gate de acceso
+  if (!unlocked) return <AccessGate onUnlock={() => setUnlocked(true)} />;
 
   // Sin usuario -> login
   if (!user) return <LoginScreen />;
