@@ -54,7 +54,7 @@ const panels: Record<PanelId, React.ReactNode> = {
 };
 
 const ACCESS_KEY = 'ptd-woodward-2026';
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyiefLahu1djCk8SMGcR6ehX4ipVlbTPlDt7QFgFQjvCwgvGGaVPLOzdzTVqfapWJsX/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby75BwUA0euK8ZTNNJ-Zjdr4Wa1r_FUapwFHvk0bLkvNZVn3gP29n2AgNnKJCkzx9bi/exec';
 
 let _geoCache: { ip: string; ubicacion: string } | null = null;
 
