@@ -82,21 +82,26 @@ function trackEvent(evento: string, usuario?: string, rol?: string, clave?: stri
       navigator.userAgent.includes('Safari') ? 'Safari' : 'Otro';
 
     getGeoInfo().then(geo => {
+      const payload = JSON.stringify({
+        fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+        hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        evento,
+        usuario: usuario || '',
+        rol: rol || '',
+        clave: clave || '',
+        ip: geo.ip,
+        ubicacion: geo.ubicacion,
+        navegador: `${browser} (${nav})`,
+      });
       fetch(WEBHOOK_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify({
-          fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-          hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          evento,
-          usuario: usuario || '',
-          rol: rol || '',
-          clave: clave || '',
-          ip: geo.ip,
-          ubicacion: geo.ubicacion,
-          navegador: `${browser} (${nav})`,
-        }),
-      }).catch(() => {});
+        body: payload,
+        redirect: 'follow',
+      }).catch(() => {
+        // Fallback: enviar via GET con query params (imagen beacon)
+        const img = new Image();
+        img.src = `${WEBHOOK_URL}?data=${encodeURIComponent(payload)}`;
+      });
     });
   } catch { /* silenciar errores de tracking */ }
 }
