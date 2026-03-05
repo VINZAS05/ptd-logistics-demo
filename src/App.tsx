@@ -52,7 +52,7 @@ const panels: Record<PanelId, React.ReactNode> = {
   admin: <AdminPanel />,
 };
 
-const ACCESS_KEY = 'ptd-woodward-2025';
+const ACCESS_KEY = 'ptd-woodward-2026';
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby-w9RSAHiNO02rhCgjV4DphmMd8Kucx_sfd2_3C4xLWG5zE5iVg8Y-g6S-7aBXSfZt/exec';
 
 function trackEvent(evento: string, usuario?: string, rol?: string, clave?: string) {
