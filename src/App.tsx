@@ -90,11 +90,11 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
   return (
     <div className="min-h-screen bg-[#0F1E3D] flex flex-col items-center justify-center p-8 relative">
       {/* Vinzas AI - esquina superior izquierda */}
-      <div className="absolute top-6 left-8 flex items-center gap-3">
-        <img src="/logo-vinzas.svg" alt="Vinzas AI" className="w-16 h-16" />
+      <div className="absolute top-6 left-8 flex items-center gap-4">
+        <img src="/logo-vinzas.svg" alt="Vinzas AI" className="w-24 h-24" />
         <div>
-          <p className="text-2xl font-bold bg-gradient-to-r from-[#00C6FF] to-[#9D00FF] bg-clip-text text-transparent">VINZAS AI</p>
-          <p className="text-white/30 text-[10px] tracking-wider">IA aplicada al negocio real</p>
+          <p className="text-3xl font-bold bg-gradient-to-r from-[#00C6FF] to-[#9D00FF] bg-clip-text text-transparent">VINZAS AI</p>
+          <p className="text-white/50 text-sm font-bold tracking-wider">IA aplicada al negocio real</p>
         </div>
       </div>
 
