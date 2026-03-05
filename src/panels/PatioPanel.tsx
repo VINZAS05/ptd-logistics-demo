@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback, Suspense } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Text, useTexture, Html } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import {
   resumenPatio, islasDetalladas, islasZonaNorte, islasZonaSur,

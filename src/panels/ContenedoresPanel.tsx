@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Search, Filter, Download, ChevronDown, ChevronUp, Package, Calendar, Ship } from 'lucide-react';
+import { Search, Filter, ChevronDown, ChevronUp, Package, Calendar, Ship } from 'lucide-react';
 import {
   islasDetalladas, NAVIERAS, TIPOS_CONTENEDOR,
   type Naviera, type TipoContenedor, type ContenedorStack,
@@ -203,7 +203,7 @@ export default function ContenedoresPanel() {
               <BarChart data={resumenNaviera} layout="vertical" margin={{ left: 0, right: 10 }}>
                 <XAxis type="number" tick={{ fontSize: 9 }} />
                 <YAxis type="category" dataKey="naviera" tick={{ fontSize: 8 }} width={75} />
-                <Tooltip formatter={(v: number) => v.toLocaleString()} />
+                <Tooltip formatter={(v) => Number(v).toLocaleString()} />
                 <Bar dataKey="count" radius={[0, 3, 3, 0]}>
                   {resumenNaviera.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />

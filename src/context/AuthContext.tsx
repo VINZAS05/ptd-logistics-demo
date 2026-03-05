@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import { ROLE_PANELS, usuariosMock, type Usuario, type PanelId, type RolId } from '../data/mockData';
+import { ROLE_PANELS, usuariosMock, type Usuario, type PanelId } from '../data/mockData';
 
 interface AuthContextType {
   user: Usuario | null;

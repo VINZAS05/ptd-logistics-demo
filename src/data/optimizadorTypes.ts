@@ -1,4 +1,4 @@
-import type { Naviera, IslaDetallada, CeldaGrid, ContenedorStack } from './mockData';
+import type { Naviera } from './mockData';
 
 // --- Ordenes de operacion ---
 

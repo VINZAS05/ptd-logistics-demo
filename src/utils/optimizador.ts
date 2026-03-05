@@ -1,12 +1,12 @@
 import type {
-  SolicitudOptimizacion, LineaOrden, PosicionRecomendada, PosicionPatio,
+  SolicitudOptimizacion, PosicionRecomendada,
   MovimientoSecuencial, MetricasOperacion, ResultadoOptimizacion,
   EstadoResumen, ScoreDetalle,
 } from '../data/optimizadorTypes';
 import { PESOS_SCORING } from '../data/optimizadorTypes';
 import {
-  type Naviera, type IslaDetallada, type CeldaGrid, type ContenedorStack,
-  islasDetalladas, clonarEstadoPatio, distanciaAcceso, NAVIERAS, tipoContenedorAleatorio,
+  type Naviera, type IslaDetallada, type ContenedorStack,
+  clonarEstadoPatio, distanciaAcceso, tipoContenedorAleatorio,
 } from '../data/mockData';
 
 // --- Constantes ---

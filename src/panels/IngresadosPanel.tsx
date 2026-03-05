@@ -1,15 +1,12 @@
 import { useState, useMemo } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line,
+  ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import {
-  datosOperacionales, movimientosIngresados, ingresadosPorDia, ingresadosPorSemana,
+  movimientosIngresados, ingresadosPorDia, ingresadosPorSemana,
   ingresadosPorMes, NAVIERAS, TIPOS_CONTENEDOR,
-  type Naviera, type TipoContenedor,
 } from '../data/mockData';
-
-const data = datosOperacionales.contenedoresIngresados;
 
 export default function IngresadosPanel() {
   const [filtroNaviera, setFiltroNaviera] = useState<string>('todas');
@@ -76,7 +73,7 @@ export default function IngresadosPanel() {
     : ingresadosPorMes.map(m => ({ label: m.mes, cantidad: m.cantidad }));
 
   // Pie navieras
-  const pieNavieras = porNaviera.map((n, i) => ({
+  const pieNavieras = porNaviera.map((n) => ({
     name: NAVIERAS.find(nav => nav.nombre === n.naviera)?.abrev || n.naviera.substring(0, 3),
     value: n.cantidad,
     fill: NAVIERAS.find(nav => nav.nombre === n.naviera)?.color || '#888',
@@ -185,7 +182,7 @@ export default function IngresadosPanel() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 10 }} />
             <YAxis tick={{ fontSize: 10 }} />
-            <Tooltip formatter={(v: number) => [v.toLocaleString(), 'Ingresados']} />
+            <Tooltip formatter={(v) => [Number(v).toLocaleString(), 'Ingresados']} />
             <Area type="monotone" dataKey="cantidad" stroke="#3b82f6" strokeWidth={2.5}
               fill="url(#gradIng)" dot={{ fill: '#3b82f6', r: 3, strokeWidth: 0 }}
               activeDot={{ r: 6, fill: '#2563eb' }} />
@@ -204,7 +201,7 @@ export default function IngresadosPanel() {
                 dataKey="value" paddingAngle={2} strokeWidth={0}>
                 {pieNavieras.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
             </PieChart>
           </ResponsiveContainer>
           <div className="grid grid-cols-2 gap-1 mt-1">
@@ -228,7 +225,7 @@ export default function IngresadosPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} />
               <YAxis dataKey="naviera" type="category" tick={{ fontSize: 10 }} width={40} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
               <Bar dataKey="cantidad" radius={[0, 4, 4, 0]}>
                 {porNaviera.map((n, i) => (
                   <Cell key={i} fill={NAVIERAS.find(nav => nav.nombre === n.naviera)?.color || '#3b82f6'} />
@@ -246,7 +243,7 @@ export default function IngresadosPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} />
               <YAxis dataKey="tipo" type="category" tick={{ fontSize: 10, fontWeight: 600 }} width={45} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
               <Bar dataKey="cantidad" fill="#3b82f6" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Users, Shield, Settings, Ship, Truck, Plus, Pencil, X, Check, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import {
-  ROLES_META, ROLE_PANELS, PANEL_LABELS, NAVIERAS,
+  ROLES_META, ROLE_PANELS, PANEL_LABELS,
   type RolId, type PanelId, type Usuario,
 } from '../data/mockData';
 
@@ -86,7 +86,7 @@ export default function AdminPanel() {
 }
 
 // ─── TAB USUARIOS ──────────────────────────────────────
-function TabUsuarios({ users, editingUser, showAddModal, onEdit, onShowAdd, onAdd, onUpdate, onDelete, onCloseEdit, onCloseAdd }: {
+function TabUsuarios({ users, editingUser, showAddModal, onEdit, onShowAdd, onAdd, onUpdate, onDelete: _onDelete, onCloseEdit, onCloseAdd }: {
   users: Usuario[]; editingUser: Usuario | null; showAddModal: boolean;
   onEdit: (u: Usuario) => void; onShowAdd: (v: boolean) => void;
   onAdd: (u: Usuario) => void; onUpdate: (id: string, d: Partial<Usuario>) => void;
@@ -281,7 +281,7 @@ function TabRoles() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
         <h3 className="text-sm font-bold text-gray-700 mb-4">Jerarquia de roles</h3>
         <div className="space-y-2">
-          {allRoles.map((rol, i) => {
+          {allRoles.map((rol) => {
             const meta = ROLES_META[rol];
             const paneles = ROLE_PANELS[rol];
             return (

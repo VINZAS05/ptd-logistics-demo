@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Brain, Play, Trash2, Plus, ArrowDown, ArrowUp, Zap, Clock,
+  Brain, Trash2, Plus, ArrowDown, ArrowUp, Zap, Clock,
   TrendingDown, Package, ChevronRight, RotateCcw, Layers, Truck,
 } from 'lucide-react';
 import { NAVIERAS, type Naviera } from '../data/mockData';

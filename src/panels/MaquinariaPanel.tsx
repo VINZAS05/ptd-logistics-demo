@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { Wrench, Fuel, Clock, Activity, AlertTriangle, CheckCircle, Pause, XCircle } from 'lucide-react';
+import { Wrench, Fuel, Activity, AlertTriangle, CheckCircle, Pause, XCircle } from 'lucide-react';
 import { maquinaria, resumenMaquinaria, maniobrasHorarias, type EstadoMaquina } from '../data/mockData';
 
 const estadoConfig: Record<EstadoMaquina, { label: string; bg: string; text: string; icon: React.ReactNode }> = {

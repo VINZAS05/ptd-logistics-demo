@@ -1,17 +1,14 @@
 import { useState, useMemo } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend,
+  ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import {
-  datosOperacionales, movimientosEvacuados, evacuadosPorDia, evacuadosPorSemana,
+  movimientosEvacuados, evacuadosPorDia, evacuadosPorSemana,
   evacuadosPorMes, tiempoEvacuacion, NAVIERAS, TIPOS_CONTENEDOR,
-  type Naviera, type TipoContenedor,
 } from '../data/mockData';
 
 const COLORS = ['#10b981', '#059669', '#047857', '#065f46', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
-
-const data = datosOperacionales.contenedoresEvacuados;
 
 export default function EvacuadosPanel() {
   const [filtroNaviera, setFiltroNaviera] = useState<string>('todas');
@@ -166,7 +163,7 @@ export default function EvacuadosPanel() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 10 }} />
             <YAxis tick={{ fontSize: 10 }} />
-            <Tooltip formatter={(v: number) => [v.toLocaleString(), 'Evacuados']} />
+            <Tooltip formatter={(v) => [Number(v).toLocaleString(), 'Evacuados']} />
             <Area type="monotone" dataKey="cantidad" stroke="#10b981" strokeWidth={2.5}
               fill="url(#gradEvac)" dot={{ fill: '#10b981', r: 3, strokeWidth: 0 }}
               activeDot={{ r: 6, fill: '#059669' }} />
@@ -185,7 +182,7 @@ export default function EvacuadosPanel() {
                 dataKey="value" paddingAngle={2} strokeWidth={0}>
                 {pieNavieras.map((_, i) => <Cell key={i} fill={pieNavieras[i].fill} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
             </PieChart>
           </ResponsiveContainer>
           <div className="grid grid-cols-2 gap-1 mt-1">
@@ -210,7 +207,7 @@ export default function EvacuadosPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} />
               <YAxis dataKey="naviera" type="category" tick={{ fontSize: 10 }} width={40} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
               <Bar dataKey="cantidad" radius={[0, 4, 4, 0]}>
                 {porNaviera.map((n, i) => (
                   <Cell key={i} fill={NAVIERAS.find(nav => nav.nombre === n.naviera)?.color || COLORS[i]} />
@@ -228,7 +225,7 @@ export default function EvacuadosPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} />
               <YAxis dataKey="tipo" type="category" tick={{ fontSize: 10, fontWeight: 600 }} width={45} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
               <Bar dataKey="cantidad" fill="#10b981" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -246,7 +243,7 @@ export default function EvacuadosPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} domain={[0, 7]} />
               <YAxis dataKey="naviera" type="category" tick={{ fontSize: 10 }} width={40} />
-              <Tooltip formatter={(v: number) => [`${v}h`, 'Tiempo prom.']} />
+              <Tooltip formatter={(v) => [`${v}h`, 'Tiempo prom.']} />
               <Bar dataKey="horas" radius={[0, 4, 4, 0]}>
                 {tiempoEvacuacion.map((t, i) => (
                   <Cell key={i} fill={t.horas > 5 ? '#ef4444' : t.horas > 4 ? '#f59e0b' : '#10b981'} />

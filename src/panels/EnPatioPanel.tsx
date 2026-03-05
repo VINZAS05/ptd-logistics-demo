@@ -1,17 +1,14 @@
 import { useState, useMemo } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, ComposedChart, Line,
+  ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import {
-  datosOperacionales, movimientosEnPatio, enPatioPorDia, enPatioPorMesIngreso,
+  movimientosEnPatio, enPatioPorDia, enPatioPorMesIngreso,
   diasPromedioPatio, NAVIERAS, TIPOS_CONTENEDOR, capacidadTotalPlano,
-  type Naviera, type TipoContenedor,
 } from '../data/mockData';
 
 const COLORS_ORANGE = ['#f97316', '#ea580c', '#c2410c', '#9a3412', '#fb923c', '#fdba74', '#fed7aa', '#ffedd5'];
-
-const data = datosOperacionales.contenedoresEnPatio;
 
 export default function EnPatioPanel() {
   const [filtroNaviera, setFiltroNaviera] = useState<string>('todas');
@@ -29,7 +26,7 @@ export default function EnPatioPanel() {
   }, [filtroNaviera, filtroTipo, filtroMes]);
 
   const totalFiltrado = movsFiltrados.reduce((s, m) => s + m.cantidad, 0);
-  const ocupacionPct = Math.round((totalFiltrado / capacidadTotalPlano) * 100);
+  const ocupacionPct = Math.round((totalFiltrado / capacidadTotalPlano.total) * 100);
 
   // Agrupar por dia
   const serieDiaria = useMemo(() => {
@@ -156,7 +153,7 @@ export default function EnPatioPanel() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 10 }} />
             <YAxis tick={{ fontSize: 10 }} />
-            <Tooltip formatter={(v: number) => [v.toLocaleString(), 'Contenedores']} />
+            <Tooltip formatter={(v) => [Number(v).toLocaleString(), 'Contenedores']} />
             <Area type="monotone" dataKey="cantidad" stroke="#f97316" strokeWidth={2.5}
               fill="url(#gradPatio)" dot={{ fill: '#f97316', r: 3, strokeWidth: 0 }}
               activeDot={{ r: 6, fill: '#ea580c' }} />
@@ -175,7 +172,7 @@ export default function EnPatioPanel() {
                 dataKey="value" paddingAngle={2} strokeWidth={0}>
                 {pieNavieras.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
             </PieChart>
           </ResponsiveContainer>
           <div className="grid grid-cols-2 gap-1 mt-1">
@@ -194,9 +191,9 @@ export default function EnPatioPanel() {
           <ResponsiveContainer width="100%" height={230}>
             <BarChart data={enPatioPorMesIngreso}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
-              <XAxis dataKey="mes" tick={{ fontSize: 9, angle: -25 }} height={45} />
+              <XAxis dataKey="mes" tick={{ fontSize: 9, angle: -25 } as Record<string, unknown>} height={45} />
               <YAxis tick={{ fontSize: 10 }} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
               <Bar dataKey="cantidad" fill="#f97316" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -210,7 +207,7 @@ export default function EnPatioPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} />
               <YAxis dataKey="tipo" type="category" tick={{ fontSize: 10, fontWeight: 600 }} width={45} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => Number(v).toLocaleString()} />
               <Bar dataKey="cantidad" fill="#f97316" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -224,7 +221,7 @@ export default function EnPatioPanel() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
               <XAxis type="number" tick={{ fontSize: 9 }} domain={[0, 25]} />
               <YAxis dataKey="naviera" type="category" tick={{ fontSize: 10 }} width={40} />
-              <Tooltip formatter={(v: number) => [`${v} dias`, 'Estancia prom.']} />
+              <Tooltip formatter={(v) => [`${v} dias`, 'Estancia prom.']} />
               <Bar dataKey="dias" radius={[0, 4, 4, 0]}>
                 {diasVsCant.map((d, i) => (
                   <Cell key={i} fill={d.dias > 18 ? '#ef4444' : d.dias > 12 ? '#f59e0b' : '#10b981'} />
