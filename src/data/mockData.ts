@@ -794,30 +794,57 @@ function generarIslaDetallada(config: IslaConfig): IslaDetallada {
   };
 }
 
-export const islasDetalladas: IslaDetallada[] = islasConfig.map(c => generarIslaDetallada(c));
+// Lazy generation: solo se genera cuando se accede por primera vez
+let _islasDetalladas: IslaDetallada[] | null = null;
+function getIslasDetalladas(): IslaDetallada[] {
+  if (!_islasDetalladas) {
+    _islasDetalladas = islasConfig.map(c => generarIslaDetallada(c));
+    // Calcular resumenPatio
+    const _totalCont = _islasDetalladas.reduce((s, i) => s + i.ocupacion, 0);
+    const _contPorNaviera: Record<Naviera, number> = { 'CMA CGM': 0, 'Cosco Shipping': 0, 'HMM': 0, 'ONE': 0, 'PIL': 0, 'Evergreen': 0, 'Wan Hai': 0, 'Yang Ming': 0, 'Hapag-Lloyd': 0 };
+    _islasDetalladas.forEach(isla => isla.resumenNavieras.forEach(rn => { _contPorNaviera[rn.naviera] += rn.cantidad; }));
+    resumenPatio = {
+      totalContenedores: _totalCont,
+      deltaHoy: 234,
+      capacidadMaxima: 20195,
+      porNaviera: (Object.entries(_contPorNaviera) as [Naviera, number][])
+        .sort((a, b) => b[1] - a[1])
+        .map(([naviera, cantidad]) => ({
+          naviera,
+          cantidad,
+          porcentaje: Math.round(cantidad / _totalCont * 1000) / 10,
+        })),
+      dwellTimePromedio: 8.3,
+      ocupacion: Math.round(_totalCont / 20195 * 1000) / 10,
+    };
+  }
+  return _islasDetalladas;
+}
 
-// Separar por zona
-export const islasZonaNorte = islasDetalladas.filter(i => i.config.zona === 'norte');
-export const islasZonaSur = islasDetalladas.filter(i => i.config.zona === 'sur');
+// Getters lazy - no generan datos hasta que se usen
+export const islasDetalladas: IslaDetallada[] = new Proxy([] as IslaDetallada[], {
+  get(_, prop) {
+    const data = getIslasDetalladas();
+    const val = (data as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof val === 'function' ? (val as Function).bind(data) : val;
+  },
+});
 
-// Calcular resumenPatio ahora que islasDetalladas esta disponible
-const _totalCont = islasDetalladas.reduce((s, i) => s + i.ocupacion, 0);
-const _contPorNaviera: Record<Naviera, number> = { 'CMA CGM': 0, 'Cosco Shipping': 0, 'HMM': 0, 'ONE': 0, 'PIL': 0, 'Evergreen': 0, 'Wan Hai': 0, 'Yang Ming': 0, 'Hapag-Lloyd': 0 };
-islasDetalladas.forEach(isla => isla.resumenNavieras.forEach(rn => { _contPorNaviera[rn.naviera] += rn.cantidad; }));
-resumenPatio = {
-  totalContenedores: _totalCont,
-  deltaHoy: 234,
-  capacidadMaxima: 20195,
-  porNaviera: (Object.entries(_contPorNaviera) as [Naviera, number][])
-    .sort((a, b) => b[1] - a[1])
-    .map(([naviera, cantidad]) => ({
-      naviera,
-      cantidad,
-      porcentaje: Math.round(cantidad / _totalCont * 1000) / 10,
-    })),
-  dwellTimePromedio: 8.3,
-  ocupacion: Math.round(_totalCont / 20195 * 1000) / 10,
-};
+// Separar por zona (tambien lazy)
+export const islasZonaNorte = new Proxy([] as IslaDetallada[], {
+  get(_, prop) {
+    const data = getIslasDetalladas().filter(i => i.config.zona === 'norte');
+    const val = (data as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof val === 'function' ? (val as Function).bind(data) : val;
+  },
+});
+export const islasZonaSur = new Proxy([] as IslaDetallada[], {
+  get(_, prop) {
+    const data = getIslasDetalladas().filter(i => i.config.zona === 'sur');
+    const val = (data as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof val === 'function' ? (val as Function).bind(data) : val;
+  },
+});
 
 // Resumen del patio actualizado basado en plano real
 export const capacidadTotalPlano = {
@@ -882,7 +909,7 @@ export const kpisHistoricos = [
 
 // Clonar el estado completo del patio (deep copy) para que el optimizador trabaje sin mutar
 export function clonarEstadoPatio(): IslaDetallada[] {
-  return islasDetalladas.map(isla => ({
+  return getIslasDetalladas().map(isla => ({
     ...isla,
     grid: isla.grid.map(fila =>
       fila.map(celda => ({
