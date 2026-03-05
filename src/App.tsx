@@ -92,9 +92,9 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
           Acceder
         </button>
       </form>
-      <div className="mt-16 flex items-center gap-3">
-        <img src="/logo-vinzas.svg" alt="Vinzas AI" className="w-6 h-6" />
-        <p className="text-xs font-bold bg-gradient-to-r from-[#00C6FF] to-[#9D00FF] bg-clip-text text-transparent">VINZAS AI</p>
+      <div className="mt-16 flex items-center gap-4">
+        <img src="/logo-vinzas.svg" alt="Vinzas AI" className="w-12 h-12" />
+        <p className="text-xl font-bold bg-gradient-to-r from-[#00C6FF] to-[#9D00FF] bg-clip-text text-transparent">VINZAS AI</p>
       </div>
     </div>
   );
