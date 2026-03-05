@@ -1,22 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Sidebar, { type PanelId } from './components/Sidebar';
 import LoginScreen from './components/LoginScreen';
 import { useAuth } from './context/AuthContext';
 import { ROLES_META } from './data/mockData';
-import HomePanel from './panels/HomePanel';
-import PatioPanel from './panels/PatioPanel';
-import GatePanel from './panels/GatePanel';
-import EvacuacionesPanel from './panels/EvacuacionesPanel';
-import TraficoPanel from './panels/TraficoPanel';
-import PagosPanel from './panels/PagosPanel';
-import KpisPanel from './panels/KpisPanel';
-import OptimizadorPanel from './panels/OptimizadorPanel';
-import MaquinariaPanel from './panels/MaquinariaPanel';
-import ContenedoresPanel from './panels/ContenedoresPanel';
-import EvacuadosPanel from './panels/EvacuadosPanel';
-import EnPatioPanel from './panels/EnPatioPanel';
-import IngresadosPanel from './panels/IngresadosPanel';
-import AdminPanel from './panels/AdminPanel';
+
+const HomePanel = lazy(() => import('./panels/HomePanel'));
+const PatioPanel = lazy(() => import('./panels/PatioPanel'));
+const GatePanel = lazy(() => import('./panels/GatePanel'));
+const EvacuacionesPanel = lazy(() => import('./panels/EvacuacionesPanel'));
+const TraficoPanel = lazy(() => import('./panels/TraficoPanel'));
+const PagosPanel = lazy(() => import('./panels/PagosPanel'));
+const KpisPanel = lazy(() => import('./panels/KpisPanel'));
+const OptimizadorPanel = lazy(() => import('./panels/OptimizadorPanel'));
+const MaquinariaPanel = lazy(() => import('./panels/MaquinariaPanel'));
+const ContenedoresPanel = lazy(() => import('./panels/ContenedoresPanel'));
+const EvacuadosPanel = lazy(() => import('./panels/EvacuadosPanel'));
+const EnPatioPanel = lazy(() => import('./panels/EnPatioPanel'));
+const IngresadosPanel = lazy(() => import('./panels/IngresadosPanel'));
+const AdminPanel = lazy(() => import('./panels/AdminPanel'));
 
 const panelTitles: Record<PanelId, string> = {
   home: 'Centro de Control',
@@ -56,18 +57,21 @@ const ACCESS_KEY = 'ptd-woodward-2026';
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby-w9RSAHiNO02rhCgjV4DphmMd8Kucx_sfd2_3C4xLWG5zE5iVg8Y-g6S-7aBXSfZt/exec';
 
 function trackEvent(evento: string, usuario?: string, rol?: string, clave?: string) {
-  const now = new Date();
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    body: JSON.stringify({
-      fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-      hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      evento,
-      usuario: usuario || '',
-      rol: rol || '',
-      clave: clave || '',
-    }),
-  }).catch(() => {});
+  try {
+    const now = new Date();
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify({
+        fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+        hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        evento,
+        usuario: usuario || '',
+        rol: rol || '',
+        clave: clave || '',
+      }),
+    }).catch(() => {});
+  } catch { /* silenciar errores de tracking */ }
 }
 
 function AccessGate({ onUnlock }: { onUnlock: () => void }) {
@@ -185,7 +189,9 @@ function App() {
 
         {/* Content */}
         <div className="flex-1 p-5 overflow-y-auto">
-          {panels[activePanel]}
+          <Suspense fallback={<div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>}>
+            {panels[activePanel]}
+          </Suspense>
         </div>
       </main>
     </div>
