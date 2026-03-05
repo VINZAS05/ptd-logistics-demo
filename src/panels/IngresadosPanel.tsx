@@ -6,9 +6,11 @@ import {
 import {
   movimientosIngresados, ingresadosPorDia, ingresadosPorSemana,
   ingresadosPorMes, NAVIERAS, TIPOS_CONTENEDOR,
+  initMovimientosIfNeeded,
 } from '../data/mockData';
 
 export default function IngresadosPanel() {
+  initMovimientosIfNeeded();
   const [filtroNaviera, setFiltroNaviera] = useState<string>('todas');
   const [filtroTipo, setFiltroTipo] = useState<string>('todos');
   const [filtroMes, setFiltroMes] = useState<string>('todos');

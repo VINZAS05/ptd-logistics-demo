@@ -5,7 +5,7 @@ import { OrbitControls, PerspectiveCamera, Text, Html } from '@react-three/drei'
 import * as THREE from 'three';
 import {
   resumenPatio, islasDetalladas, islasZonaNorte, islasZonaSur,
-  capacidadTotalPlano, NAVIERAS,
+  capacidadTotalPlano, NAVIERAS, initIslasIfNeeded,
   type IslaDetallada, type CeldaGrid,
 } from '../data/mockData';
 import { Search, RotateCcw, ZoomIn, ZoomOut, Snowflake, MapPin, Layers, ChevronUp, X, Box, Truck, Maximize2, Boxes, Container } from 'lucide-react';
@@ -991,6 +991,7 @@ function Patio3DView({ highlightContainerId }: { highlightContainerId: string | 
 // PANEL PRINCIPAL
 // ==========================================
 export default function PatioPanel() {
+  initIslasIfNeeded();
   const [selectedIsla, setSelectedIsla] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');

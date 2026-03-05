@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Search, Filter, ChevronDown, ChevronUp, Package, Calendar, Ship } from 'lucide-react';
 import {
-  islasDetalladas, NAVIERAS, TIPOS_CONTENEDOR,
+  islasDetalladas, NAVIERAS, TIPOS_CONTENEDOR, initIslasIfNeeded,
   type Naviera, type TipoContenedor, type ContenedorStack,
 } from '../data/mockData';
 
@@ -49,6 +49,7 @@ type SortField = 'id' | 'naviera' | 'tipo' | 'fechaIngreso' | 'diasEnPatio' | 'i
 type SortDir = 'asc' | 'desc';
 
 export default function ContenedoresPanel() {
+  initIslasIfNeeded();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterNaviera, setFilterNaviera] = useState<Naviera | ''>('');
   const [filterTipo, setFilterTipo] = useState<TipoContenedor | ''>('');

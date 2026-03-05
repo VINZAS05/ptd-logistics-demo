@@ -7,6 +7,7 @@ import { PESOS_SCORING } from '../data/optimizadorTypes';
 import {
   type Naviera, type IslaDetallada, type ContenedorStack,
   clonarEstadoPatio, distanciaAcceso, tipoContenedorAleatorio,
+  initIslasIfNeeded,
 } from '../data/mockData';
 
 // --- Constantes ---
@@ -385,6 +386,7 @@ function generarResumen(estado: IslaDetallada[]): EstadoResumen {
 // =============================================
 
 export function optimizar(solicitud: SolicitudOptimizacion): ResultadoOptimizacion {
+  initIslasIfNeeded();
   // Clonar estado para no mutar datos originales
   const estadoOpt = clonarEstadoPatio();
   const estadoBaseline = clonarEstadoPatio();

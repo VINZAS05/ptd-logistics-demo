@@ -5,6 +5,7 @@ import {
   resumenPatio, resumenEvacuacion, resumenTrafico,
   alertas, operacionesRecientes, tendenciaSemanal,
   datosOperacionales, NAVIERAS, resumenMaquinaria,
+  initIslasIfNeeded,
 } from '../data/mockData';
 
 const navieraColor: Record<string, string> = {};
@@ -30,6 +31,7 @@ const opIconColor = {
 };
 
 export default function HomePanel() {
+  initIslasIfNeeded();
   const pieNavieraData = datosOperacionales.contenedoresEnPatio.porNaviera.map(n => ({
     name: n.naviera,
     value: n.cantidad,

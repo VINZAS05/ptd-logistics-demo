@@ -331,10 +331,22 @@ const enPatioDiarioBase = [
   { dia: 26, mes: 'febrero', cantidad: 384 }, { dia: 27, mes: 'febrero', cantidad: 732 },
 ];
 
-// Generar movimientos detallados
-export const movimientosEvacuados = generarMovimientos(evacuadosDiarioBase, pesoNavierasEvac, pesoTiposStd, 2026);
-export const movimientosIngresados = generarMovimientos(ingresadosDiarioBase, pesoNavierasIng, pesoTiposStd, 2026);
-export const movimientosEnPatio = generarMovimientos(enPatioDiarioBase, pesoNavierasPatio, pesoTiposStd, 2026);
+// Generar movimientos detallados (lazy)
+let _movEvac: MovimientoDiario[] | null = null;
+let _movIng: MovimientoDiario[] | null = null;
+let _movPatio: MovimientoDiario[] | null = null;
+export function getMovimientosEvacuados() { if (!_movEvac) _movEvac = generarMovimientos(evacuadosDiarioBase, pesoNavierasEvac, pesoTiposStd, 2026); return _movEvac; }
+export function getMovimientosIngresados() { if (!_movIng) _movIng = generarMovimientos(ingresadosDiarioBase, pesoNavierasIng, pesoTiposStd, 2026); return _movIng; }
+export function getMovimientosEnPatio() { if (!_movPatio) _movPatio = generarMovimientos(enPatioDiarioBase, pesoNavierasPatio, pesoTiposStd, 2026); return _movPatio; }
+export let movimientosEvacuados: MovimientoDiario[] = [];
+export let movimientosIngresados: MovimientoDiario[] = [];
+export let movimientosEnPatio: MovimientoDiario[] = [];
+
+export function initMovimientosIfNeeded() {
+  if (movimientosEvacuados.length === 0) movimientosEvacuados = getMovimientosEvacuados();
+  if (movimientosIngresados.length === 0) movimientosIngresados = getMovimientosIngresados();
+  if (movimientosEnPatio.length === 0) movimientosEnPatio = getMovimientosEnPatio();
+}
 
 // Datos base para graficos simples (sin desglose)
 export const evacuadosPorDia = evacuadosDiarioBase;
@@ -821,30 +833,20 @@ function getIslasDetalladas(): IslaDetallada[] {
   return _islasDetalladas;
 }
 
-// Getters lazy - no generan datos hasta que se usen
-export const islasDetalladas: IslaDetallada[] = new Proxy([] as IslaDetallada[], {
-  get(_, prop) {
-    const data = getIslasDetalladas();
-    const val = (data as unknown as Record<string | symbol, unknown>)[prop];
-    return typeof val === 'function' ? (val as Function).bind(data) : val;
-  },
-});
+export { getIslasDetalladas };
+// Re-exported as lazy-initialized values
+export let islasDetalladas: IslaDetallada[] = [];
+export let islasZonaNorte: IslaDetallada[] = [];
+export let islasZonaSur: IslaDetallada[] = [];
 
-// Separar por zona (tambien lazy)
-export const islasZonaNorte = new Proxy([] as IslaDetallada[], {
-  get(_, prop) {
-    const data = getIslasDetalladas().filter(i => i.config.zona === 'norte');
-    const val = (data as unknown as Record<string | symbol, unknown>)[prop];
-    return typeof val === 'function' ? (val as Function).bind(data) : val;
-  },
-});
-export const islasZonaSur = new Proxy([] as IslaDetallada[], {
-  get(_, prop) {
-    const data = getIslasDetalladas().filter(i => i.config.zona === 'sur');
-    const val = (data as unknown as Record<string | symbol, unknown>)[prop];
-    return typeof val === 'function' ? (val as Function).bind(data) : val;
-  },
-});
+export function initIslasIfNeeded() {
+  if (islasDetalladas.length === 0) {
+    const data = getIslasDetalladas();
+    islasDetalladas = data;
+    islasZonaNorte = data.filter(i => i.config.zona === 'norte');
+    islasZonaSur = data.filter(i => i.config.zona === 'sur');
+  }
+}
 
 // Resumen del patio actualizado basado en plano real
 export const capacidadTotalPlano = {

@@ -6,11 +6,13 @@ import {
 import {
   movimientosEvacuados, evacuadosPorDia, evacuadosPorSemana,
   evacuadosPorMes, tiempoEvacuacion, NAVIERAS, TIPOS_CONTENEDOR,
+  initMovimientosIfNeeded,
 } from '../data/mockData';
 
 const COLORS = ['#10b981', '#059669', '#047857', '#065f46', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
 
 export default function EvacuadosPanel() {
+  initMovimientosIfNeeded();
   const [filtroNaviera, setFiltroNaviera] = useState<string>('todas');
   const [filtroTipo, setFiltroTipo] = useState<string>('todos');
   const [filtroMes, setFiltroMes] = useState<string>('todos');

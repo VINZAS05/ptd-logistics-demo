@@ -6,11 +6,13 @@ import {
 import {
   movimientosEnPatio, enPatioPorDia, enPatioPorMesIngreso,
   diasPromedioPatio, NAVIERAS, TIPOS_CONTENEDOR, capacidadTotalPlano,
+  initMovimientosIfNeeded,
 } from '../data/mockData';
 
 const COLORS_ORANGE = ['#f97316', '#ea580c', '#c2410c', '#9a3412', '#fb923c', '#fdba74', '#fed7aa', '#ffedd5'];
 
 export default function EnPatioPanel() {
+  initMovimientosIfNeeded();
   const [filtroNaviera, setFiltroNaviera] = useState<string>('todas');
   const [filtroTipo, setFiltroTipo] = useState<string>('todos');
   const [filtroMes, setFiltroMes] = useState<string>('todos');
