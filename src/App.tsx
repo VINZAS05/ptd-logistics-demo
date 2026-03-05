@@ -56,21 +56,48 @@ const panels: Record<PanelId, React.ReactNode> = {
 const ACCESS_KEY = 'ptd-woodward-2026';
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby-w9RSAHiNO02rhCgjV4DphmMd8Kucx_sfd2_3C4xLWG5zE5iVg8Y-g6S-7aBXSfZt/exec';
 
+let _geoCache: { ip: string; ubicacion: string } | null = null;
+
+async function getGeoInfo(): Promise<{ ip: string; ubicacion: string }> {
+  if (_geoCache) return _geoCache;
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    _geoCache = {
+      ip: data.ip || '',
+      ubicacion: `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`,
+    };
+  } catch {
+    _geoCache = { ip: '', ubicacion: '' };
+  }
+  return _geoCache;
+}
+
 function trackEvent(evento: string, usuario?: string, rol?: string, clave?: string) {
   try {
     const now = new Date();
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({
-        fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-        hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        evento,
-        usuario: usuario || '',
-        rol: rol || '',
-        clave: clave || '',
-      }),
-    }).catch(() => {});
+    const nav = navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop';
+    const browser = navigator.userAgent.includes('Chrome') ? 'Chrome' :
+      navigator.userAgent.includes('Firefox') ? 'Firefox' :
+      navigator.userAgent.includes('Safari') ? 'Safari' : 'Otro';
+
+    getGeoInfo().then(geo => {
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({
+          fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          evento,
+          usuario: usuario || '',
+          rol: rol || '',
+          clave: clave || '',
+          ip: geo.ip,
+          ubicacion: geo.ubicacion,
+          navegador: `${browser} (${nav})`,
+        }),
+      }).catch(() => {});
+    });
   } catch { /* silenciar errores de tracking */ }
 }
 
