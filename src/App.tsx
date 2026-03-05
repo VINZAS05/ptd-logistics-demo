@@ -53,6 +53,22 @@ const panels: Record<PanelId, React.ReactNode> = {
 };
 
 const ACCESS_KEY = 'ptd-woodward-2025';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby-w9RSAHiNO02rhCgjV4DphmMd8Kucx_sfd2_3C4xLWG5zE5iVg8Y-g6S-7aBXSfZt/exec';
+
+function trackEvent(evento: string, usuario?: string, rol?: string, clave?: string) {
+  const now = new Date();
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      fecha: now.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+      hora: now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      evento,
+      usuario: usuario || '',
+      rol: rol || '',
+      clave: clave || '',
+    }),
+  }).catch(() => {});
+}
 
 function AccessGate({ onUnlock }: { onUnlock: () => void }) {
   const [key, setKey] = useState('');
@@ -62,8 +78,10 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
     e.preventDefault();
     if (key === ACCESS_KEY) {
       sessionStorage.setItem('ptd_access', '1');
+      trackEvent('Acceso con clave', '', '', 'correcta');
       onUnlock();
     } else {
+      trackEvent('Intento fallido', '', '', key);
       setError(true);
       setTimeout(() => setError(false), 2000);
     }
@@ -104,6 +122,14 @@ function App() {
   const { user, hasAccess, allowedPanels } = useAuth();
   const [activePanel, setActivePanel] = useState<PanelId>('home');
   const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('ptd_access') === '1');
+
+  // Tracking de login de perfil
+  useEffect(() => {
+    if (user) {
+      const rolMeta = ROLES_META[user.rol];
+      trackEvent('Login perfil', user.nombre, rolMeta?.label || user.rol);
+    }
+  }, [user]);
 
   // Si el panel activo no es accesible, ir al primero permitido
   useEffect(() => {
