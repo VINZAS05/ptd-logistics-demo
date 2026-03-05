@@ -1,0 +1,25 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradiente-logo" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00C6FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9D00FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Trazo principal: ángulo L con esquina redondeada -->
+  <path d="M 280 130 L 150 350 L 350 350"
+        stroke="url(#gradiente-logo)"
+        stroke-width="70"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
+
+  <!-- Trazo derecho: barra diagonal (la "i" de AI) -->
+  <line x1="340" y1="230" x2="420" y2="350"
+        stroke="url(#gradiente-logo)"
+        stroke-width="70"
+        stroke-linecap="round" />
+
+  <!-- Círculo: punto de la "i" -->
+  <circle cx="340" cy="180" r="35" fill="url(#gradiente-logo)" />
+</svg>

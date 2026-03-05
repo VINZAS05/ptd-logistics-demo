@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-azul-oscuro: #142850;
+  --color-azul-medio: #28508C;
+  --color-azul-claro: #4682C8;
+  --color-verde: #28A050;
+  --color-naranja: #E68C1E;
+  --color-rojo: #C83C3C;
+  --color-fondo: #F5F7FA;
+  --color-sidebar: #0F1E3D;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
