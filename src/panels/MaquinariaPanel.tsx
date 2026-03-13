@@ -206,6 +206,76 @@ export default function MaquinariaPanel() {
         </table>
       </div>
 
+      {/* Comunicacion con tablets / instrucciones en tiempo real */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-5 py-3 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-blue-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-500"><rect width="18" height="14" x="3" y="3" rx="2"/><path d="M7 21h10"/><path d="M12 17v4"/></svg>
+            <h3 className="text-sm font-bold text-indigo-700">Instrucciones a Tablets (Reach Stackers)</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-verde animate-pulse" />
+            <span className="text-[10px] text-indigo-500">7 tablets conectadas</span>
+          </div>
+        </div>
+        <table className="w-full text-xs">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-2.5 text-left text-gray-500 font-medium">Maquina</th>
+              <th className="px-4 py-2.5 text-left text-gray-500 font-medium">Instruccion actual</th>
+              <th className="px-4 py-2.5 text-center text-gray-500 font-medium">Destino</th>
+              <th className="px-4 py-2.5 text-center text-gray-500 font-medium">Confirmado</th>
+              <th className="px-4 py-2.5 text-center text-gray-500 font-medium">Tablet</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { maq: 'RS-01', instruccion: 'CMAU4521387 → Isla 01, F12, C8, Niv 3', destino: 'I01-12-8-N3', confirmado: true, tablet: true },
+              { maq: 'RS-02', instruccion: 'COSU7834562 → Isla 03, F5, C14, Niv 2', destino: 'I03-5-14-N2', confirmado: true, tablet: true },
+              { maq: 'RS-03', instruccion: 'HMMU2345678 → Isla 04, F18, C6, Niv 4', destino: 'I04-18-6-N4', confirmado: false, tablet: true },
+              { maq: 'RS-04', instruccion: 'En espera de asignacion', destino: '-', confirmado: false, tablet: true },
+              { maq: 'RS-05', instruccion: 'WAHU9012345 → Isla 05, F3, C11, Niv 1', destino: 'I05-3-11-N1', confirmado: true, tablet: true },
+              { maq: 'RS-06', instruccion: 'ONEU6789012 → Sur-A, F9, C7, Niv 2', destino: 'SA-9-7-N2', confirmado: true, tablet: true },
+              { maq: 'RS-08', instruccion: 'CMAU1234890 → Isla 06, F15, C3, Niv 5', destino: 'I06-15-3-N5', confirmado: true, tablet: true },
+              { maq: 'GP-01', instruccion: 'Zona carga - Isla 02', destino: 'I02', confirmado: true, tablet: true },
+            ].map(row => (
+              <tr key={row.maq} className="border-t border-gray-50 hover:bg-gray-50/50">
+                <td className="px-4 py-2.5 font-bold text-gray-800">{row.maq}</td>
+                <td className="px-4 py-2.5">
+                  <span className={`font-mono text-[11px] ${row.instruccion.includes('espera') ? 'text-gray-400 italic' : 'text-gray-700'}`}>
+                    {row.instruccion}
+                  </span>
+                </td>
+                <td className="px-4 py-2.5 text-center">
+                  {row.destino !== '-' ? (
+                    <span className="px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded text-[10px] font-bold">{row.destino}</span>
+                  ) : (
+                    <span className="text-gray-300">-</span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5 text-center">
+                  {row.confirmado ? (
+                    <CheckCircle size={14} className="text-green-500 mx-auto" />
+                  ) : (
+                    <span className="inline-flex px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-700">Pendiente</span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5 text-center">
+                  {row.tablet ? (
+                    <div className="flex items-center justify-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-verde" />
+                      <span className="text-[10px] text-gray-500">Online</span>
+                    </div>
+                  ) : (
+                    <span className="text-gray-300 text-[10px]">Sin tablet</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       {/* Alertas de maquinaria */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-amber-50 rounded-lg border border-amber-200 p-4">

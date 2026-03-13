@@ -87,10 +87,10 @@ function IslaCompacta({
       <div className="absolute inset-0 flex flex-col justify-between p-1.5 z-10">
         <div className="flex items-start justify-between">
           <div>
-            <span className="text-[10px] font-bold text-white drop-shadow leading-none block">
+            <span className="text-sm font-bold text-white drop-shadow leading-none block">
               {config.id.replace('ISLA-', '').replace('SUR-', 'S-')}
             </span>
-            <span className="text-[7px] text-white/60 drop-shadow leading-none mt-0.5 block">
+            <span className="text-[9px] text-white/60 drop-shadow leading-none mt-0.5 block">
               {config.gridFilas}x{config.gridColumnas}
             </span>
           </div>
@@ -103,10 +103,10 @@ function IslaCompacta({
         </div>
 
         <div className="text-center">
-          <span className="text-base font-black text-white drop-shadow-lg leading-none">
+          <span className="text-lg font-black text-white drop-shadow-lg leading-none">
             {ocupacion.toLocaleString()}
           </span>
-          <span className="text-[7px] text-white/50 block -mt-0.5">
+          <span className="text-[9px] text-white/50 block -mt-0.5">
             / {config.capacidad.toLocaleString()}
           </span>
         </div>
@@ -115,7 +115,7 @@ function IslaCompacta({
           <div className="flex-1 bg-black/25 rounded-full h-1.5">
             <div className="h-full rounded-full transition-all" style={{ width: `${ocupacionPct}%`, backgroundColor: pctColor }} />
           </div>
-          <span className="text-[8px] font-bold text-white/80">{ocupacionPct}%</span>
+          <span className="text-xs font-bold text-white/80">{ocupacionPct}%</span>
         </div>
       </div>
 
@@ -610,11 +610,12 @@ function IslaBase3D({ isla, offsetX, offsetZ, selected, onSelect }: {
       </mesh>
       {/* Label */}
       <Text
-        position={[offsetX + w / 2, -0.15, offsetZ + d + 0.5]}
-        fontSize={0.35}
+        position={[offsetX + w / 2, -0.15, offsetZ + d + 0.6]}
+        fontSize={0.55}
         color={config.zona === 'norte' ? '#2563eb' : '#d97706'}
         anchorX="center"
         anchorY="middle"
+        fontWeight="bold"
       >
         {config.id.replace('ISLA-', 'I').replace('SUR-', 'S-')} ({isla.ocupacionPct}%)
       </Text>

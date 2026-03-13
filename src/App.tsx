@@ -18,6 +18,10 @@ const EvacuadosPanel = lazy(() => import('./panels/EvacuadosPanel'));
 const EnPatioPanel = lazy(() => import('./panels/EnPatioPanel'));
 const IngresadosPanel = lazy(() => import('./panels/IngresadosPanel'));
 const AdminPanel = lazy(() => import('./panels/AdminPanel'));
+const TransportistasPanel = lazy(() => import('./panels/TransportistasPanel'));
+const InspeccionesPanel = lazy(() => import('./panels/InspeccionesPanel'));
+const PortalAgentesPanel = lazy(() => import('./panels/PortalAgentesPanel'));
+const ConteconPanel = lazy(() => import('./panels/ConteconPanel'));
 
 const panelTitles: Record<PanelId, string> = {
   home: 'Centro de Control',
@@ -34,6 +38,10 @@ const panelTitles: Record<PanelId, string> = {
   pagos: 'Facturacion y Pagos',
   kpis: 'KPIs y Reportes',
   admin: 'Administracion',
+  transportistas: 'Gestion de Transportistas',
+  inspecciones: 'Inspecciones de Contenedores',
+  portal_agentes: 'Portal de Agentes Aduanales',
+  contecon: 'Vista ConTeCon',
 };
 
 const panels: Record<PanelId, React.ReactNode> = {
@@ -51,9 +59,18 @@ const panels: Record<PanelId, React.ReactNode> = {
   pagos: <PagosPanel />,
   kpis: <KpisPanel />,
   admin: <AdminPanel />,
+  transportistas: <TransportistasPanel />,
+  inspecciones: <InspeccionesPanel />,
+  portal_agentes: <PortalAgentesPanel />,
+  contecon: <ConteconPanel />,
 };
 
 const ACCESS_KEY = 'ptd-woodward-2026';
+const DEMO_DEADLINE = new Date('2026-03-14T23:59:00-07:00'); // Sab 14 mar 23:59 PDT California
+
+function isDemoExpired(): boolean {
+  return new Date() >= DEMO_DEADLINE;
+}
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycby75BwUA0euK8ZTNNJ-Zjdr4Wa1r_FUapwFHvk0bLkvNZVn3gP29n2AgNnKJCkzx9bi/exec';
 
 let _geoCache: { ip: string; ubicacion: string } | null = null;
@@ -109,18 +126,37 @@ function trackEvent(evento: string, usuario?: string, rol?: string, clave?: stri
 function AccessGate({ onUnlock }: { onUnlock: () => void }) {
   const [key, setKey] = useState('');
   const [error, setError] = useState(false);
+  const [expired, setExpired] = useState(false);
+  const [visited, setVisited] = useState(false);
+
+  // Trackear visita a la pagina (una sola vez)
+  useEffect(() => {
+    if (!visited) {
+      setVisited(true);
+      if (isDemoExpired()) {
+        trackEvent('Visita - demo expirada');
+      } else {
+        trackEvent('Visita - demo activa');
+      }
+    }
+  }, [visited]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (key === ACCESS_KEY) {
-      sessionStorage.setItem('ptd_access', '1');
-      trackEvent('Acceso con clave', '', '', 'correcta');
-      onUnlock();
-    } else {
+    if (key !== ACCESS_KEY) {
       trackEvent('Intento fallido', '', '', key);
       setError(true);
       setTimeout(() => setError(false), 2000);
+      return;
     }
+    if (isDemoExpired()) {
+      trackEvent('Demo expirada - clave correcta', '', '', 'correcta');
+      setExpired(true);
+      return;
+    }
+    sessionStorage.setItem('ptd_access', '1');
+    trackEvent('Acceso con clave', '', '', 'correcta');
+    onUnlock();
   };
 
   return (
@@ -147,10 +183,11 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
           value={key}
           onChange={e => setKey(e.target.value)}
           placeholder="Clave de acceso"
-          className={`w-full px-4 py-3 rounded-lg bg-white/[0.08] border ${error ? 'border-red-500' : 'border-white/20'} text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-400 transition-colors`}
+          className={`w-full px-4 py-3 rounded-lg bg-white/[0.08] border ${error ? 'border-red-500' : expired ? 'border-amber-500' : 'border-white/20'} text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-400 transition-colors`}
           autoFocus
         />
         {error && <p className="text-red-400 text-xs mt-2">Clave incorrecta</p>}
+        {expired && <p className="text-amber-400 text-xs mt-2">Esta demo ha finalizado. Contacta al equipo Vinzas AI.</p>}
         <button type="submit" className="w-full mt-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors">
           Acceder
         </button>
@@ -162,7 +199,13 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
 function App() {
   const { user, hasAccess, allowedPanels } = useAuth();
   const [activePanel, setActivePanel] = useState<PanelId>('home');
-  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('ptd_access') === '1');
+  const [unlocked, setUnlocked] = useState(() => {
+    if (isDemoExpired()) {
+      sessionStorage.removeItem('ptd_access');
+      return false;
+    }
+    return sessionStorage.getItem('ptd_access') === '1';
+  });
 
   // Tracking de login de perfil
   useEffect(() => {

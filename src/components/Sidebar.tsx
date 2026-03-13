@@ -3,6 +3,7 @@ import {
   LayoutDashboard, Map, DoorOpen, Truck, Route,
   CreditCard, BarChart3, Settings, Brain, Wrench, List,
   ArrowDownToLine, PackageCheck, ArrowUpFromLine, ChevronDown, LogOut,
+  Users, ClipboardCheck, Building2, Ship,
 } from 'lucide-react';
 import { type PanelId, ROLES_META } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
@@ -26,10 +27,14 @@ const allMenuItems: MenuItem[] = [
   { id: 'optimizador', label: 'Optimizador', icon: <Brain size={20} /> },
   { id: 'gate', label: 'Gate', icon: <DoorOpen size={20} /> },
   { id: 'evacuaciones', label: 'Evacuaciones', icon: <Truck size={20} /> },
+  { id: 'transportistas', label: 'Transportistas', icon: <Users size={20} /> },
   { id: 'maquinaria', label: 'Maquinaria', icon: <Wrench size={20} /> },
   { id: 'trafico', label: 'Trafico', icon: <Route size={20} /> },
+  { id: 'inspecciones', label: 'Inspecciones', icon: <ClipboardCheck size={20} /> },
+  { id: 'portal_agentes', label: 'Portal Agentes', icon: <Building2 size={20} /> },
   { id: 'pagos', label: 'Pagos', icon: <CreditCard size={20} /> },
   { id: 'kpis', label: 'KPIs', icon: <BarChart3 size={20} /> },
+  { id: 'contecon', label: 'ConTeCon', icon: <Ship size={20} /> },
   { id: 'admin', label: 'Admin', icon: <Settings size={20} /> },
 ];
 
