@@ -5,15 +5,15 @@
 // RBAC - Roles, Permisos, Usuarios
 // ============================================================
 
-export type PanelId = 'home' | 'patio' | 'contenedores' | 'evacuados' | 'en_patio' | 'ingresados' | 'gate' | 'evacuaciones' | 'trafico' | 'maquinaria' | 'pagos' | 'kpis' | 'optimizador' | 'admin' | 'transportistas' | 'inspecciones' | 'portal_agentes' | 'contecon';
+export type PanelId = 'home' | 'patio' | 'contenedores' | 'evacuados' | 'en_patio' | 'ingresados' | 'gate' | 'evacuaciones' | 'trafico' | 'maquinaria' | 'pagos' | 'kpis' | 'optimizador' | 'admin' | 'transportistas' | 'inspecciones' | 'portal_agentes' | 'contecon' | 'ptd_trucks';
 
 export type RolId = 'director' | 'gerente' | 'admin' | 'programacion' | 'checador' | 'operador';
 
 export const ROLE_PANELS: Record<RolId, PanelId[]> = {
-  director: ['home', 'patio', 'contenedores', 'evacuados', 'en_patio', 'ingresados', 'optimizador', 'gate', 'evacuaciones', 'maquinaria', 'trafico', 'pagos', 'kpis', 'admin', 'transportistas', 'inspecciones', 'portal_agentes', 'contecon'],
-  gerente: ['home', 'patio', 'contenedores', 'evacuados', 'en_patio', 'ingresados', 'optimizador', 'gate', 'evacuaciones', 'maquinaria', 'trafico', 'pagos', 'kpis', 'transportistas', 'inspecciones', 'portal_agentes', 'contecon'],
+  director: ['home', 'patio', 'contenedores', 'evacuados', 'en_patio', 'ingresados', 'optimizador', 'gate', 'evacuaciones', 'maquinaria', 'trafico', 'pagos', 'kpis', 'admin', 'transportistas', 'inspecciones', 'portal_agentes', 'contecon', 'ptd_trucks'],
+  gerente: ['home', 'patio', 'contenedores', 'evacuados', 'en_patio', 'ingresados', 'optimizador', 'gate', 'evacuaciones', 'maquinaria', 'trafico', 'pagos', 'kpis', 'transportistas', 'inspecciones', 'portal_agentes', 'contecon', 'ptd_trucks'],
   admin: ['home', 'pagos', 'kpis', 'admin', 'portal_agentes'],
-  programacion: ['home', 'evacuaciones', 'contenedores', 'evacuados', 'en_patio', 'ingresados', 'transportistas', 'inspecciones'],
+  programacion: ['home', 'evacuaciones', 'contenedores', 'evacuados', 'en_patio', 'ingresados', 'transportistas', 'inspecciones', 'ptd_trucks'],
   checador: ['home', 'gate', 'inspecciones'],
   operador: ['home', 'patio', 'maquinaria'],
 };
@@ -33,7 +33,7 @@ export const PANEL_LABELS: Record<PanelId, string> = {
   gate: 'Gate', evacuaciones: 'Evacuaciones', maquinaria: 'Maquinaria',
   trafico: 'Trafico', pagos: 'Pagos', kpis: 'KPIs', admin: 'Admin',
   transportistas: 'Transportistas', inspecciones: 'Inspecciones',
-  portal_agentes: 'Portal Agentes', contecon: 'ConTeCon',
+  portal_agentes: 'Portal Agentes', contecon: 'ConTeCon', ptd_trucks: 'PTD Trucks',
 };
 
 export interface Usuario {

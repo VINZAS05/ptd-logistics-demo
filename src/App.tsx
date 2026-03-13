@@ -22,6 +22,7 @@ const TransportistasPanel = lazy(() => import('./panels/TransportistasPanel'));
 const InspeccionesPanel = lazy(() => import('./panels/InspeccionesPanel'));
 const PortalAgentesPanel = lazy(() => import('./panels/PortalAgentesPanel'));
 const ConteconPanel = lazy(() => import('./panels/ConteconPanel'));
+const PTDTrucksPanel = lazy(() => import('./panels/PTDTrucksPanel'));
 
 const panelTitles: Record<PanelId, string> = {
   home: 'Centro de Control',
@@ -42,6 +43,7 @@ const panelTitles: Record<PanelId, string> = {
   inspecciones: 'Inspecciones de Contenedores',
   portal_agentes: 'Portal de Agentes Aduanales',
   contecon: 'Vista ConTeCon',
+  ptd_trucks: 'PTD Trucks',
 };
 
 const panels: Record<PanelId, React.ReactNode> = {
@@ -63,6 +65,7 @@ const panels: Record<PanelId, React.ReactNode> = {
   inspecciones: <InspeccionesPanel />,
   portal_agentes: <PortalAgentesPanel />,
   contecon: <ConteconPanel />,
+  ptd_trucks: <PTDTrucksPanel />,
 };
 
 const ACCESS_KEY = 'ptd-woodward-2026';

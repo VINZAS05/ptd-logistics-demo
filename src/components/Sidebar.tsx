@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Map, DoorOpen, Truck, Route,
   CreditCard, BarChart3, Settings, Brain, Wrench, List,
   ArrowDownToLine, PackageCheck, ArrowUpFromLine, ChevronDown, LogOut,
-  Users, ClipboardCheck, Building2, Ship,
+  Users, ClipboardCheck, Building2, Ship, Navigation,
 } from 'lucide-react';
 import { type PanelId, ROLES_META } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
@@ -34,6 +34,7 @@ const allMenuItems: MenuItem[] = [
   { id: 'portal_agentes', label: 'Portal Agentes', icon: <Building2 size={20} /> },
   { id: 'pagos', label: 'Pagos', icon: <CreditCard size={20} /> },
   { id: 'kpis', label: 'KPIs', icon: <BarChart3 size={20} /> },
+  { id: 'ptd_trucks', label: 'PTD Trucks', icon: <Navigation size={20} /> },
   { id: 'contecon', label: 'ConTeCon', icon: <Ship size={20} /> },
   { id: 'admin', label: 'Admin', icon: <Settings size={20} /> },
 ];
